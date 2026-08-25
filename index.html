@@ -66,20 +66,22 @@
         if (submit) submit.disabled = true;
         try {
           const payload = {
+            'access_key': '8fd443c4-8bd4-4034-81d9-63d1ac281aaa',
             'Имя': name,
             'Телефон': phone,
             'Сумма': fields[2] && fields[2].tagName === 'INPUT' ? fields[2].value.trim() : '',
             'Тип залога': form.querySelector('select')?.value || '',
             'Страница': location.href,
-            '_subject': 'Новая заявка с credit-estate.site',
-            '_template': 'table'
+            'subject': 'Новая заявка с credit-estate.site',
+            'from_name': 'Заявки credit-estate.site'
           };
-          const response = await fetch('https://formsubmit.co/ajax/kbkapital23@yandex.ru', {
+          const response = await fetch('https://api.web3forms.com/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify(payload)
           });
-          if (!response.ok) throw new Error('Form submission failed');
+          const result = await response.json();
+          if (!response.ok || !result.success) throw new Error('Form submission failed');
           form.innerHTML = '<div class="rounded-xl bg-emerald-50 p-5 text-center text-emerald-900"><p class="font-display font-bold">Заявка принята!</p><p class="mt-1 text-sm text-emerald-700">Персональный менеджер перезвонит в течение 15 минут и назовёт точную ставку.</p></div>';
         } catch (error) {
           if (submit) submit.disabled = false;
