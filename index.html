@@ -88,13 +88,16 @@
       }, true);
     </script>
     <script>
-      function fixTelegramContactLinks() {
+      function fixMessengerContactLinks() {
         document.querySelectorAll('a[href="https://t.me/89376620020"]').forEach(function (link) {
           link.href = 'https://t.me/+79376620020';
         });
+        document.querySelectorAll('a[href="https://max.ru/89376620020"]').forEach(function (link) {
+          link.href = 'https://max.ru/u/f9LHodD0cOLYLScx60L26fU0-8UUxbtk9IBem7jlFFLDUg07AC9_S9jcTOM';
+        });
       }
-      new MutationObserver(fixTelegramContactLinks).observe(document.body, { childList: true, subtree: true });
-      fixTelegramContactLinks();
+      new MutationObserver(fixMessengerContactLinks).observe(document.body, { childList: true, subtree: true });
+      fixMessengerContactLinks();
     </script>
   </body>
 </html>
