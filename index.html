@@ -87,5 +87,14 @@
         }
       }, true);
     </script>
+    <script>
+      function fixTelegramContactLinks() {
+        document.querySelectorAll('a[href="https://t.me/89376620020"]').forEach(function (link) {
+          link.href = 'https://t.me/+79376620020';
+        });
+      }
+      new MutationObserver(fixTelegramContactLinks).observe(document.body, { childList: true, subtree: true });
+      fixTelegramContactLinks();
+    </script>
   </body>
 </html>
