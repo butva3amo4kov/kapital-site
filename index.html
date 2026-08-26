@@ -65,18 +65,17 @@
         const submit = form.querySelector('[type="submit"]');
         if (submit) submit.disabled = true;
         try {
-          const params = new URLSearchParams(location.search);
           const payload = {
-            name: name,
-            phone: phone,
-            amount: fields[2] && fields[2].tagName === 'INPUT' ? fields[2].value.trim() : '',
-            collateral: form.querySelector('select')?.value || '',
-            page: location.href,
-            utm: ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']
-              .map(function (key) { return params.get(key) ? key + '=' + params.get(key) : ''; })
-              .filter(Boolean).join('&')
+            'access_key': '8fd443c4-8bd4-4034-81d9-63d1ac281aaa',
+            'Имя': name,
+            'Телефон': phone,
+            'Сумма': fields[2] && fields[2].tagName === 'INPUT' ? fields[2].value.trim() : '',
+            'Тип залога': form.querySelector('select')?.value || '',
+            'Страница': location.href,
+            'subject': 'Новая заявка с credit-estate.site',
+            'from_name': 'Заявки credit-estate.site'
           };
-          const response = await fetch('https://amocrm-leads.butva3amo4kov.workers.dev/lead', {
+          const response = await fetch('https://api.web3forms.com/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify(payload)
