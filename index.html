@@ -154,6 +154,12 @@
             }
           });
 
+          const privacyLink = document.querySelector('a[href="./privacy-policy.html"]');
+          const personalDataLink = document.querySelector('a[href="./personal-data-policy.html"]');
+          if (privacyLink && personalDataLink && privacyLink.parentElement === personalDataLink.parentElement) {
+            privacyLink.parentElement.insertBefore(personalDataLink, privacyLink);
+          }
+
           document.querySelectorAll('p').forEach(function (p) {
             if (p.textContent.includes('Всё, что влияет на стоимость кредитования под залога')) {
               p.textContent = p.textContent.replace('под залога', 'под залог');
