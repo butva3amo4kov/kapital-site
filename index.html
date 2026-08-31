@@ -126,11 +126,13 @@
           document.querySelectorAll('button').forEach(function (button) {
             if (button.textContent.replace(/\s+/g, ' ').trim() !== 'Получить консультацию') return;
             const parent = button.parentElement;
-            if (!parent || parent.querySelector('[data-quiz-consent]')) return;
+            const consentText = 'Я даю согласие на обработку персональных данных и подтверждаю ознакомление с политикой конфиденциальности';
+            /* The build already contains a consent note in some forms. Do not add a second identical note. */
+            if (!parent || parent.querySelector('[data-quiz-consent]') || parent.textContent.replace(/\s+/g, ' ').includes(consentText)) return;
             const note = document.createElement('p');
             note.dataset.quizConsent = 'true';
             note.className = 'mt-3 text-center text-xs text-muted-foreground';
-            note.textContent = 'Я даю согласие на обработку персональных данных и подтверждаю ознакомление с политикой конфиденциальности';
+            note.textContent = consentText;
             parent.insertBefore(note, button.nextSibling);
           });
         }
