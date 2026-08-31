@@ -135,9 +135,18 @@
           });
         }
 
+        function updateServiceButtons() {
+          document.querySelectorAll('a').forEach(function (link) {
+            if (link.textContent.replace(/\s+/g, ' ').trim().indexOf('Подробнее') !== -1) {
+              link.textContent = 'Оставить заявку';
+            }
+          });
+        }
+
         function applySitePatch() {
           replaceText();
           addQuizConsent();
+          updateServiceButtons();
 
           if (document.body.dataset.capitalStaticPatchApplied === 'true') return;
           document.body.dataset.capitalStaticPatchApplied = 'true';
@@ -178,7 +187,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
           applySitePatch();
-          new MutationObserver(function () { replaceText(); addQuizConsent(); }).observe(document.body, { childList: true, subtree: true });
+          new MutationObserver(function () { replaceText(); addQuizConsent(); updateServiceButtons(); }).observe(document.body, { childList: true, subtree: true });
         });
       })();
     </script>
