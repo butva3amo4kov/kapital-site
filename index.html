@@ -101,5 +101,80 @@
       new MutationObserver(fixMessengerContactLinks).observe(document.body, { childList: true, subtree: true });
       fixMessengerContactLinks();
     </script>
+    <script>
+      /* Content and legal-links patch for the published static build. */
+      (function () {
+        const replacements = new Map([
+          ['Получить деньги', 'Получить консультацию'],
+          ['Консультируем по вопросам залогового кредитования и помогаем подобрать варианты у партнёров.', 'Помогаем с получением залогового кредитования любой сложности'],
+          ['Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности', 'Я даю согласие на обработку персональных данных и подтверждаю ознакомление с политикой конфиденциальности'],
+          ['Всё, что влияет на стоимость кредитования под залога, — на этой странице и в договоре.', 'Всё, что влияет на стоимость кредитования под залог, — на этой странице и в договоре.']
+        ]);
+
+        function replaceText(node) {
+          const walker = document.createTreeWalker(node || document.body, NodeFilter.SHOW_TEXT);
+          const nodes = [];
+          while (walker.nextNode()) nodes.push(walker.currentNode);
+          nodes.forEach(function (textNode) {
+            let value = textNode.nodeValue;
+            replacements.forEach(function (to, from) { value = value.split(from).join(to); });
+            if (value !== textNode.nodeValue) textNode.nodeValue = value;
+          });
+        }
+
+        function addQuizConsent() {
+          document.querySelectorAll('button').forEach(function (button) {
+            if (button.textContent.replace(/\s+/g, ' ').trim() !== 'Получить консультацию') return;
+            const parent = button.parentElement;
+            if (!parent || parent.querySelector('[data-quiz-consent]')) return;
+            const note = document.createElement('p');
+            note.dataset.quizConsent = 'true';
+            note.className = 'mt-3 text-center text-xs text-muted-foreground';
+            note.textContent = 'Я даю согласие на обработку персональных данных и подтверждаю ознакомление с политикой конфиденциальности';
+            parent.insertBefore(note, button.nextSibling);
+          });
+        }
+
+        function applySitePatch() {
+          replaceText();
+          addQuizConsent();
+
+          if (document.body.dataset.capitalStaticPatchApplied === 'true') return;
+          document.body.dataset.capitalStaticPatchApplied = 'true';
+
+          document.querySelectorAll('a').forEach(function (link) {
+            const label = link.textContent.replace(/\s+/g, ' ').trim();
+            if (label === 'Подробнее') {
+              link.childNodes.forEach(function (node) { if (node.nodeType === Node.TEXT_NODE) node.nodeValue = 'Оставить заявку '; });
+            }
+            if (label === 'Политика конфиденциальности') link.href = './privacy-policy.html';
+            if (label === 'Договор оферты') {
+              link.href = './personal-data-policy.html';
+              link.textContent = 'Политика персональных данных';
+            }
+          });
+
+          document.querySelectorAll('p').forEach(function (p) {
+            if (p.textContent.includes('Всё, что влияет на стоимость кредитования под залога')) {
+              p.textContent = p.textContent.replace('под залога', 'под залог');
+            }
+          });
+
+          const hero = document.querySelector('#top h1');
+          if (hero) hero.textContent = 'Консультация по залоговому кредитованию у партнёра';
+
+          document.querySelectorAll('li, p').forEach(function (element) {
+            if (element.textContent.includes('Оставьте заявку на сайте или позвоните нам по номеру +7 (927) 797-33-43')) {
+              element.innerHTML = 'Оставьте заявку на сайте или позвоните нам по номеру <a class="underline underline-offset-2" href="tel:+79277973343">+7 (927) 797-33-43</a>';
+            }
+          });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+          applySitePatch();
+          new MutationObserver(function () { replaceText(); addQuizConsent(); }).observe(document.body, { childList: true, subtree: true });
+        });
+      })();
+    </script>
   </body>
 </html>
